@@ -1,6 +1,6 @@
 /* Visuels provisoires dessinés en code, dans l'esprit d'une planche d'analyse posturale.
    Remplacés automatiquement par la vraie image dès qu'elle est déclarée dans IMAGES (data.js). */
-import { IMAGES } from './data.js';
+import { IMAGES } from './data.js?v=2';
 
 const INK = '#1B1D1F';
 const SIG = '#2F5BFF';
