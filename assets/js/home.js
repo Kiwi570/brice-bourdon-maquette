@@ -1,10 +1,10 @@
 /* Accueil : colonne qui s'aligne, profils, approche en couches, séance, cabinets, journal, réservation simulée. */
-import { init, calm, isDesktop, finePointer, protractorReveal } from './core.js?v=2';
-import { createSpine } from './spine.js?v=2';
-import { Stabilo } from './stabilo.js?v=2';
-import { CABINETS, ARTICLES, TARIFS, PRATICIEN } from './data.js?v=2';
-import { fillMedia } from './placeholders.js?v=2';
-import { openState, nowParis, DAYS, label as hourLabel } from './hours.js?v=2';
+import { init, calm, isDesktop, finePointer, protractorReveal } from './core.js';
+import { createSpine } from './spine.js';
+import { Stabilo } from './stabilo.js';
+import { CABINETS, ARTICLES, TARIFS, PRATICIEN } from './data.js';
+import { fillMedia } from './placeholders.js';
+import { openState, nowParis, DAYS, label as hourLabel } from './hours.js';
 
 const gsap = window.gsap;
 const ScrollTrigger = window.ScrollTrigger;
@@ -87,7 +87,7 @@ function profils() {
   const mm = gsap.matchMedia();
   mm.add('(min-width: 900px)', () => {
     sec.classList.add('is-pinned');
-    const dist = () => { const w = track.parentElement, cs = getComputedStyle(w); return Math.max(0, track.scrollWidth - (w.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight))); };
+    const dist = () => Math.max(0, track.scrollWidth - track.parentElement.clientWidth);
     const tween = gsap.to(track, {
       x: () => -dist(), ease: 'none',
       scrollTrigger: { trigger: sec, start: 'top top', end: () => '+=' + dist(), pin: true, scrub: 1, invalidateOnRefresh: true,
@@ -99,7 +99,7 @@ function profils() {
       m.classList.add('protractor');
       m.style.setProperty('--a', '0deg');
       const o = { a: 0 };
-      gsap.to(o, { a: 180, ease: 'none', scrollTrigger: { trigger: card, containerAnimation: tween, start: 'left 98%', end: 'left 70%', scrub: true },
+      gsap.to(o, { a: 180, ease: 'none', scrollTrigger: { trigger: card, containerAnimation: tween, start: 'left 98%', end: 'left 45%', scrub: true },
         onUpdate: () => m.style.setProperty('--a', o.a + 'deg') });
     });
     return () => { sec.classList.remove('is-pinned'); cards.forEach(c => { const m = c.querySelector('.media'); m?.classList.remove('protractor'); m?.style.removeProperty('--a'); }); };
@@ -124,7 +124,6 @@ function approche() {
   const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
   const ease = x => x * x * (3 - 2 * x);
 
-  let lastIdx = -1;
   function draw() {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, W, H);
@@ -218,11 +217,8 @@ function approche() {
     }
     ctx.globalAlpha = 1;
     const idx = Math.min(3, Math.floor(clamp(P, 0, 3.999)));
-    if (idx !== lastIdx) {
-      lastIdx = idx;
-      if (layerName) layerName.innerHTML = `Couche ${idx + 1} / 4 · <b>${NAMES[idx]}</b>`;
-      piliers.forEach((p, i) => p.classList.toggle('is-active', i === idx));
-    }
+    if (layerName) layerName.innerHTML = `Couche ${idx + 1} / 4 · <b>${NAMES[idx]}</b>`;
+    piliers.forEach((p, i) => p.classList.toggle('is-active', i === idx));
   }
 
   resize();
@@ -304,7 +300,7 @@ function plan() {
   for (let y = 0; y <= 660; y += 40) grid += `M0 ${y}H600`;
   host.innerHTML = `
   <svg viewBox="0 0 600 660" role="img" aria-labelledby="plan-title">
-    <title id="plan-title">Plan schématique : la ligne B du métro relie Lyon 6 Brotteaux à Oullins</title>
+    <title id="plan-title">Plan schématique : la ligne B du métro relie Lyon 6 Brotteaux à Oullins</title>
     <rect width="600" height="660" fill="#F2F1EC"/>
     <path d="${grid}" stroke="rgba(27,29,31,.06)" fill="none"/>
     <path class="plan-river" d="${path(rhone)}" fill="none" stroke="#C9C6BF" stroke-width="14" stroke-linecap="round"/>
@@ -447,15 +443,15 @@ function booking() {
     stepLabel.textContent = s.step < 3 ? `Étape ${s.step + 1} / 3` : 'Récapitulatif';
     let html = '';
     if (s.step === 0) {
-      html = `<div class="booking__panel"><h3>Quel cabinet ?</h3><div class="choices">${CABINETS.map(c => `<button type="button" class="choice" data-v="${c.id}" aria-pressed="${s.cabinet === c.id}"><span>${c.nom}<small>${c.adresse}, ${c.ville}</small></span><span class="mono">${c.id === 'oullins' ? 'Métro B' : 'Lyon 6'}</span></button>`).join('')}</div></div>`;
+      html = `<div class="booking__panel"><h3>Quel cabinet ?</h3><div class="choices">${CABINETS.map(c => `<button type="button" class="choice" data-v="${c.id}" aria-pressed="${s.cabinet === c.id}"><span>${c.nom}<small>${c.adresse}, ${c.ville}</small></span><span class="mono">${c.id === 'oullins' ? 'Métro B' : 'Lyon 6'}</span></button>`).join('')}</div></div>`;
     } else if (s.step === 1) {
-      html = `<div class="booking__panel"><h3>Pour quel motif ?</h3><div class="choices">${MOTIFS.map(m => `<button type="button" class="choice" data-v="${m.id}" aria-pressed="${s.motif === m.id}"><span>${m.label}<small>${m.detail}</small></span><span class="mono num">${priceTxt(m.prix)}</span></button>`).join('')}</div></div>`;
+      html = `<div class="booking__panel"><h3>Pour quel motif ?</h3><div class="choices">${MOTIFS.map(m => `<button type="button" class="choice" data-v="${m.id}" aria-pressed="${s.motif === m.id}"><span>${m.label}<small>${m.detail}</small></span><span class="mono num">${priceTxt(m.prix)}</span></button>`).join('')}</div></div>`;
     } else if (s.step === 2) {
       const ds = days();
       if (!s.day) s.day = ds[0].toISOString();
       const cur = new Date(s.day);
       const sl = slotsFor(cur);
-      html = `<div class="booking__panel"><h3>Quel créneau ?</h3><p class="mono illustratif">Créneaux fictifs pour la démonstration</p>
+      html = `<div class="booking__panel"><h3>Quel créneau ?</h3><p class="mono illustratif">Créneaux fictifs pour la démonstration</p>
         <div class="days">${ds.map(d => `<button type="button" class="day" data-day="${d.toISOString()}" aria-pressed="${d.toDateString() === cur.toDateString()}"><span class="mono">${d.toLocaleDateString('fr-FR', { weekday: 'short' })}</span><b>${d.getDate()}</b><span class="mono">${d.toLocaleDateString('fr-FR', { month: 'short' })}</span></button>`).join('')}</div>
         <div class="slots">${sl.length ? sl.map(t => `<button type="button" class="slot" data-slot="${t}" aria-pressed="${s.slot === t}">${t.replace(':', ' h ')}</button>`).join('') : '<p>Aucun créneau ce jour-là.</p>'}</div></div>`;
     } else {

@@ -14,6 +14,12 @@ Toutes les données qui changent sont dans `assets/js/data.js` : coordonnées, c
 
 Une image s’ajoute en deux temps : déposer `nom-800.webp` et `nom-1600.webp` dans `assets/img/`, puis déclarer `nom.webp` dans `IMAGES`. Tant qu’une image n’est pas déclarée, son emplacement affiche un visuel provisoire dessiné en code.
 
+## Images
+
+- 29 photos reprises du site actuel, recadrées et converties en WebP.
+- 5 images générées : `profil-grossesse`, `tarifs-drap`, `hero-texture` (ordinateur et téléphone, derrière la colonne, ombre alignée sur l’axe) et `article-vertiges-horizon` (l’horizon se remet de niveau au défilement).
+- Reste à fournir : `cabinet-lyon6`, une vraie photo du cabinet du 19 rue Godefroy.
+
 ## Modes de secours
 
 - `?calme=1` ou bouton « Mode calme » : animations réduites, version complète et lisible.
@@ -25,7 +31,7 @@ Une image s’ajoute en deux temps : déposer `nom-800.webp` et `nom-1600.webp` 
 - Numéro à mettre en avant : 06 86 70 59 26 (partout sur le site) ou 04 87 37 65 64 (page Contact). Un article indique 06 86 70 59 56.
 - Adresse de Lyon 6 : « 19 rue Godefroy » partout, sauf une fois « 9 rue Godefroy ».
 - Horaires par cabinet (le site donne un seul bloc : lundi–vendredi 8 h–20 h, samedi 14 h–19 h).
-- Photo du cabinet de Lyon 6, et confirmation du cabinet visible sur la photo de salle reprise du site.
+- Photo du cabinet de Lyon 6 (seul emplacement encore provisoire), et confirmation du cabinet visible sur la photo de salle reprise du site.
 - Déroulé d’une séance d’ostéopathie (étapes proposées dans la maquette).
 - Chiffres affichés par le site : « +20 000 patients », « 5/5, plus de 250 avis Google ». À vérifier au moment de la mise en ligne.
 - Année du diplôme de masso-kinésithérapie.

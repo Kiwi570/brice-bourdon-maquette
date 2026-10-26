@@ -1,7 +1,7 @@
 /* Article : niveau à bulle de lecture, sommaire suivi, sensations animées, articles liés. */
-import { init, calm } from './core.js?v=2';
-import { ARTICLES } from './data.js?v=2';
-import { fillMedia } from './placeholders.js?v=2';
+import { init, calm } from './core.js';
+import { ARTICLES } from './data.js';
+import { fillMedia } from './placeholders.js';
 
 const gsap = window.gsap;
 const ScrollTrigger = window.ScrollTrigger;
@@ -98,8 +98,22 @@ function related() {
   fillMedia(host);
 }
 
+function horizon() {
+  const fig = document.querySelector('.horizon');
+  if (!fig) return;
+  const inner = fig.querySelector('.parallax-inner');
+  const out = fig.querySelector('.horizon__angle');
+  const fmt = v => v.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '°';
+  if (calm) { if (out) out.textContent = fmt(0); return; }
+  const st = { a: -3 };
+  gsap.set(inner, { rotation: st.a, scale: 1.04, transformOrigin: '50% 63%' });
+  gsap.to(st, { a: 0, ease: 'none', scrollTrigger: { trigger: fig, start: 'top 85%', end: 'center 45%', scrub: true },
+    onUpdate: () => { gsap.set(inner, { rotation: st.a }); if (out) out.textContent = fmt(Math.abs(st.a)); } });
+}
+
 init(() => {
   related();
+  horizon();
   level();
   toc();
   sensations();

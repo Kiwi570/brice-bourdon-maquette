@@ -135,7 +135,7 @@ p { margin: 0; }
 @media (min-width: 900px) { .ruler { display: block; } }
 
 /* ---------- Curseur fil à plomb ---------- */
-.plumb { position: fixed; inset: 0; z-index: 90; pointer-events: none; width: 100vw; height: 100vh; height: 100dvh; }
+.plumb { position: fixed; inset: 0; z-index: 90; pointer-events: none; width: 100vw; height: 100vh; }
 html.has-plumb, html.has-plumb a, html.has-plumb button, html.has-plumb summary, html.has-plumb label { cursor: none; }
 html.has-plumb input, html.has-plumb textarea { cursor: text; }
 
@@ -284,8 +284,8 @@ html.is-calm .intro, html.no-js .intro { display: none; }
 .pilier h3 { font-size: clamp(1.5rem, 2.6vw, 2.3rem); font-weight: 330; }
 .pilier p { color: var(--ink-2); max-width: 46ch; }
 .pilier a { font-size: var(--t-small); color: var(--signal-deep); }
-/* le texte des piliers inactifs reste lisible : seul le titre s’efface */
-.approche.is-pinned .pilier:not(.is-active) h3 { opacity: .5; transition: opacity .5s var(--ease); }
+.approche.is-pinned .pilier { opacity: .32; }
+.approche.is-pinned .pilier.is-active { opacity: 1; }
 .pilier.is-active .pilier__key { color: var(--signal); }
 @media (min-width: 900px) {
   .approche__layout { grid-template-columns: minmax(0, 1fr) minmax(0, .9fr); gap: 64px; align-items: center; }
@@ -581,21 +581,14 @@ html.is-calm .protractor__dial { display: none; }
   .profils.is-pinned .profils__progress { margin-top: 20px; }
 }
 
-/* ---------- Finitions (audit) ---------- */
-/* menu ouvert : la page ne défile plus, même sans Lenis ; le menu défile en paysage */
-html.menu-ouvert { overflow: hidden; }
-.menu { overflow-y: auto; overscroll-behavior: contain; }
-@media (max-height: 520px) { .menu nav { margin-block: 20px; } .menu nav a { font-size: 1.6rem; } }
-/* cibles tactiles : 44 px */
-.btn--small { --bh: 44px; }
-.calm-toggle, .menu-btn, .menu__close { height: 44px; }
-.chip { height: 44px; }
-.copy-btn { height: 44px; }
-.booking__back { padding: 12px 0; }
-@media (pointer: coarse) { .crumbs a, .footer__col .link-line { display: inline-block; padding-block: 10px; } }
-/* coordonnées devenues liens : même dessin qu'avant */
-a.phone__number, a.tel-link { color: inherit; text-decoration: none; }
-/* page introuvable */
-.page-404 { min-height: 70svh; display: grid; align-content: center; gap: 22px; padding-block: 140px 80px; }
-.page-404 h1 { font-size: clamp(2.4rem, 6vw, 4.5rem); font-weight: 320; letter-spacing: -.04em; text-wrap: balance; }
-.page-404 .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+/* ---------- Textures et horizon (v2) ---------- */
+.hero__texture { position: absolute; inset: 0; z-index: 0; pointer-events: none; -webkit-mask: radial-gradient(closest-side, #000 45%, transparent 100%); mask: radial-gradient(closest-side, #000 45%, transparent 100%); }
+.hero__texture img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; mix-blend-mode: multiply; opacity: .45; max-width: none; }
+.hero__stage canvas, .hero__axis { z-index: 1; }
+.hero__stage .readout, .hero__stage .levels { z-index: 2; }
+.tarifs__bg .media img { mix-blend-mode: luminosity; }
+.horizon { margin: 8px 0 0; }
+.horizon .media { overflow: hidden; }
+.horizon .parallax-inner { inset: -10% -6%; }
+.horizon figcaption { display: flex; justify-content: space-between; gap: 12px; color: var(--ink-2); margin-top: 10px; border-top: 1px solid var(--line-strong); padding-top: 8px; }
+.horizon__angle { color: var(--signal-deep); }

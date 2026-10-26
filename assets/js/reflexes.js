@@ -1,7 +1,7 @@
 /* Page Réflexes archaïques : figures au trait, déroulé qui se dessine, événements triés. */
-import { init, calm, protractorReveal } from './core.js?v=2';
-import { createFigure } from './figures.js?v=2';
-import { EVENEMENTS } from './data.js?v=2';
+import { init, calm, protractorReveal } from './core.js';
+import { createFigure } from './figures.js';
+import { EVENEMENTS } from './data.js';
 
 const gsap = window.gsap;
 const ScrollTrigger = window.ScrollTrigger;
