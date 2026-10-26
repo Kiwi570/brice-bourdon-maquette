@@ -1,7 +1,7 @@
 /* Article : niveau à bulle de lecture, sommaire suivi, sensations animées, articles liés. */
-import { init, calm } from './core.js';
-import { ARTICLES } from './data.js';
-import { fillMedia } from './placeholders.js';
+import { init, calm } from './core.js?v=2';
+import { ARTICLES } from './data.js?v=2';
+import { fillMedia } from './placeholders.js?v=2';
 
 const gsap = window.gsap;
 const ScrollTrigger = window.ScrollTrigger;
