@@ -1,10 +1,10 @@
 /* Accueil : colonne qui s'aligne, profils, approche en couches, séance, cabinets, journal, réservation simulée. */
-import { init, calm, isDesktop, finePointer, protractorReveal } from './core.js?v=2';
-import { createSpine } from './spine.js?v=2';
-import { Stabilo } from './stabilo.js?v=2';
-import { CABINETS, ARTICLES, TARIFS, PRATICIEN } from './data.js?v=2';
-import { fillMedia } from './placeholders.js?v=2';
-import { openState, nowParis, DAYS, label as hourLabel } from './hours.js?v=2';
+import { init, calm, isDesktop, finePointer, protractorReveal } from './core.js?v=20261027';
+import { createSpine } from './spine.js?v=20261027';
+import { Stabilo } from './stabilo.js?v=20261027';
+import { CABINETS, ARTICLES, TARIFS, PRATICIEN } from './data.js?v=20261027';
+import { fillMedia } from './placeholders.js?v=20261027';
+import { openState, nowParis, DAYS, label as hourLabel } from './hours.js?v=20261027';
 
 const gsap = window.gsap;
 const ScrollTrigger = window.ScrollTrigger;
