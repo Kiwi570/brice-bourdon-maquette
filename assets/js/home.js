@@ -1,10 +1,10 @@
 /* Accueil : colonne qui s'aligne, profils, approche en couches, séance, cabinets, journal, réservation simulée. */
-import { init, calm, isDesktop, finePointer, protractorReveal } from './core.js?v=20261028';
-import { createSpine } from './spine.js?v=20261028';
-import { Stabilo } from './stabilo.js?v=20261028';
-import { CABINETS, ARTICLES, TARIFS, PRATICIEN } from './data.js?v=20261028';
-import { fillMedia } from './placeholders.js?v=20261028';
-import { openState, nowParis, DAYS, label as hourLabel } from './hours.js?v=20261028';
+import { init, calm, isDesktop, finePointer, protractorReveal } from './core.js?v=20261028-2';
+import { createSpine } from './spine.js?v=20261028-2';
+import { Stabilo } from './stabilo.js?v=20261028-2';
+import { CABINETS, ARTICLES, TARIFS, PRATICIEN } from './data.js?v=20261028-2';
+import { fillMedia } from './placeholders.js?v=20261028-2';
+import { openState, nowParis, DAYS, label as hourLabel } from './hours.js?v=20261028-2';
 
 const gsap = window.gsap;
 const ScrollTrigger = window.ScrollTrigger;
@@ -51,7 +51,7 @@ async function hero() {
   const tl = gsap.timeline({ paused: true, defaults: { ease: 'expo.out' } });
   if (window.SplitText && title) {
     const split = window.SplitText.create(title, { type: 'lines, words', mask: 'lines' });
-    tl.from(split.words, { yPercent: 115, duration: 1.3, stagger: .06 }, 0);
+    tl.from(split.words, { yPercent: 115, duration: 1, stagger: .05 }, 0);
   }
   tl.from('.hero .eyebrow', { opacity: 0, y: 12, duration: .9 }, .15)
     .from('.hero__lead', { opacity: 0, y: 18, duration: 1 }, .35)
@@ -232,9 +232,11 @@ function approche() {
   gsap.ticker.add((t, dt) => { time += dt / 1000; Pt += (P - Pt) * .12; const keep = P; P = Pt; draw(); P = keep; });
   const mm = gsap.matchMedia();
   mm.add('(min-width: 900px)', () => {
+    // la section entière est épinglée en haut : colonne flex de 100svh sous l'en-tête mesuré (--entete-h)
     sec.classList.add('is-pinned');
-    ScrollTrigger.create({ trigger: sec.querySelector('.approche__layout'), start: 'center center', end: () => '+=' + innerHeight * 2.4, pin: true, scrub: true, onUpdate: s => { P = s.progress * 4; } });
-    return () => sec.classList.remove('is-pinned');
+    resize();
+    ScrollTrigger.create({ trigger: sec, start: 'top top', end: () => '+=' + innerHeight * 2.4, pin: true, scrub: true, invalidateOnRefresh: true, onRefresh: resize, onUpdate: s => { P = s.progress * 4; } });
+    return () => { sec.classList.remove('is-pinned'); resize(); };
   });
   mm.add('(max-width: 899px)', () => {
     piliers.forEach((p, i) => ScrollTrigger.create({ trigger: p, start: 'top 75%', end: 'bottom 40%', onToggle: s => { if (s.isActive) P = i + .99; } }));

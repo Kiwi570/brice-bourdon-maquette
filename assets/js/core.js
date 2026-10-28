@@ -1,6 +1,6 @@
 /* Socle commun à toutes les pages : défilement fluide, mode calme, curseur fil à plomb,
    boutons magnétiques, rideau de transition, ouverture, révélations au défilement. */
-import { fillMedia } from './placeholders.js?v=20261028';
+import { fillMedia } from './placeholders.js?v=20261028-2';
 
 const gsap = window.gsap;
 const ScrollTrigger = window.ScrollTrigger;
@@ -98,6 +98,36 @@ function setupHeader() {
       ScrollTrigger.create({ trigger: sec, start: 'top 50%', end: 'bottom 50%', onToggle: s => { if (s.isActive) label.textContent = sec.dataset.section; } });
     });
   }
+}
+
+/* ---------- Hauteurs mesurées (en-tête, barre du bas) et masquage de la barre ---------- */
+function setupBars() {
+  const header = document.querySelector('.header');
+  const bar = document.querySelector('.mobilebar');
+  if (bar && document.querySelector('.page-404')) bar.classList.add('is-off');
+  const measure = () => {
+    if (header) root.style.setProperty('--entete-h', `${Math.round(header.getBoundingClientRect().bottom)}px`);
+    const shown = bar && getComputedStyle(bar).display !== 'none';
+    root.style.setProperty('--barres-h', `${shown ? Math.round(bar.offsetHeight) : 0}px`);
+  };
+  measure();
+  window.addEventListener('resize', measure);
+  if ('ResizeObserver' in window) { const ro = new ResizeObserver(measure); [header, bar].forEach(el => el && ro.observe(el)); }
+  if (!bar || bar.classList.contains('is-off')) return;
+  if (!('IntersectionObserver' in window)) { bar.classList.add('is-shown'); return; }
+
+  // visible seulement une fois le héros dépassé, jamais sur le formulaire ni le pied de page,
+  // ni sur une section épinglée (grand écran) qui occupe toute la hauteur
+  const hero = document.querySelector('.hero, .page-hero, .article-hero');
+  const epingles = [...document.querySelectorAll('.profils, .approche')];
+  let pastHero = !hero;
+  const over = new Set();
+  const sync = () => bar.classList.toggle('is-shown', pastHero && ![...over].some(el => !epingles.includes(el) || isDesktop()));
+  if (hero) new IntersectionObserver(([e]) => { pastHero = !e.isIntersecting && e.boundingClientRect.top < 0; sync(); }).observe(hero);
+  const io = new IntersectionObserver(entries => { entries.forEach(e => { e.isIntersecting ? over.add(e.target) : over.delete(e.target); }); sync(); });
+  [...document.querySelectorAll('#rdv, form, footer'), ...epingles].forEach(el => io.observe(el));
+  window.addEventListener('resize', sync);
+  sync();
 }
 
 let menuEl = null;
@@ -212,18 +242,19 @@ function setupCurtain(onOpened) {
     const letters = name ? [...name.textContent].map(ch => `<span>${ch === ' ' ? '&nbsp;' : ch}</span>`).join('') : '';
     if (name) name.innerHTML = letters;
     const tl = gsap.timeline({ defaults: { ease: 'expo.out' }, onComplete: () => { intro.remove(); } });
-    tl.from(intro.querySelector('.intro__thread'), { scaleY: 0, duration: .7, ease: 'power3.in' })
-      .from(intro.querySelector('.intro__bob'), { y: '-46vh', duration: .7, ease: 'power3.in' }, 0)
-      .to(intro.querySelector('.intro__thread'), { rotate: 3, duration: .22, ease: 'sine.out' }, .7)
-      .to(intro.querySelector('.intro__thread'), { rotate: -1.6, duration: .26, ease: 'sine.inOut' }, .92)
-      .to(intro.querySelector('.intro__thread'), { rotate: 0, duration: .3, ease: 'sine.out' }, 1.18)
-      .to(intro.querySelector('.intro__bob'), { x: '1.2vw', duration: .22, ease: 'sine.out' }, .7)
-      .to(intro.querySelector('.intro__bob'), { x: '-.6vw', duration: .26, ease: 'sine.inOut' }, .92)
-      .to(intro.querySelector('.intro__bob'), { x: 0, duration: .3, ease: 'sine.out' }, 1.18)
-      .from(name?.children || [], { y: 26, opacity: 0, stagger: .025, duration: .7 }, .55)
-      .from(intro.querySelector('.intro__meta'), { opacity: 0, y: 10, duration: .6 }, .9)
-      .to(intro, { yPercent: -100, duration: .9, ease: 'expo.inOut' }, 1.65)
-      .add(() => onOpened?.(), 1.85);
+    // ouverture resserrée : le voile part à 1,2 s et le titre monte pendant sa sortie
+    tl.from(intro.querySelector('.intro__thread'), { scaleY: 0, duration: .5, ease: 'power3.in' })
+      .from(intro.querySelector('.intro__bob'), { y: '-46vh', duration: .5, ease: 'power3.in' }, 0)
+      .to(intro.querySelector('.intro__thread'), { rotate: 3, duration: .18, ease: 'sine.out' }, .5)
+      .to(intro.querySelector('.intro__thread'), { rotate: -1.6, duration: .2, ease: 'sine.inOut' }, .68)
+      .to(intro.querySelector('.intro__thread'), { rotate: 0, duration: .24, ease: 'sine.out' }, .88)
+      .to(intro.querySelector('.intro__bob'), { x: '1.2vw', duration: .18, ease: 'sine.out' }, .5)
+      .to(intro.querySelector('.intro__bob'), { x: '-.6vw', duration: .2, ease: 'sine.inOut' }, .68)
+      .to(intro.querySelector('.intro__bob'), { x: 0, duration: .24, ease: 'sine.out' }, .88)
+      .from(name?.children || [], { y: 26, opacity: 0, stagger: .02, duration: .55 }, .35)
+      .from(intro.querySelector('.intro__meta'), { opacity: 0, y: 10, duration: .45 }, .65)
+      .to(intro, { yPercent: -100, duration: .8, ease: 'expo.inOut' }, 1.2)
+      .add(() => onOpened?.(), 1.2);
   } else {
     intro?.remove();
     gsap.fromTo(curtain, { scaleY: 1, transformOrigin: '50% 100%' }, { scaleY: 0, duration: .8, ease: 'expo.inOut', delay: .05, onComplete: () => onOpened?.() });
@@ -331,6 +362,7 @@ export function init(pageInit) {
   setupScroll();
   fillMedia();
   setupHeader();
+  setupBars();
   setupMenu();
   setupPlumb();
   setupMagnetic();
