@@ -1,6 +1,6 @@
 /* Socle commun à toutes les pages : défilement fluide, mode calme, curseur fil à plomb,
    boutons magnétiques, rideau de transition, ouverture, révélations au défilement. */
-import { fillMedia } from './placeholders.js?v=20261027';
+import { fillMedia } from './placeholders.js?v=20261028';
 
 const gsap = window.gsap;
 const ScrollTrigger = window.ScrollTrigger;
